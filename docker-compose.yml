@@ -1,0 +1,82 @@
+
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    expose:
+      - "80"
+    volumes:
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+      - ./wordpress:/var/www/${DOMAIN}
+    depends_on:
+      - wordpress
+    environment:
+      DOMAIN: ${DOMAIN}
+    networks:
+      - wpnet
+
+  wordpress:
+    image: wordpress:php8.2-fpm
+    build:
+      context: .
+      dockerfile: php.Dockerfile
+    container_name: wp-app
+    volumes:
+      - ./wordpress:/var/www/${DOMAIN}
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      DOMAIN: ${DOMAIN}
+    networks:
+      - wpnet
+
+  db:
+    image: mariadb:10.5
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+    networks:
+      - wpnet
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+    - nginx
+    networks:
+      - wpnet
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    command: redis-server --maxmemory ${REDIS_MAXMEMORY} --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - wpnet
+    restart: unless-stopped
+
+
+volumes:
+  db_data:
+  redis_data:
+
+networks:
+  wpnet:
