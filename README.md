@@ -108,7 +108,7 @@ gzip_types
 ### 3.5 Caddy for SSL
 
 ```text
-ng.assettolab.com {
+example.com {
     reverse_proxy nginx:80 {
         header_up X-Forwarded-Proto https
     }
