@@ -13,6 +13,7 @@
 # 🎈 [CASE STUDY] WordPress on Docker: 5000 Client Benchmark on 1GB RAM VPS
 
 > **"Optimizing WordPress at this level isn’t about plugins — it’s about removing bottlenecks one by one."**
+
 > ⚠️ Disclaimer: This repo focuses solely on the technical side – site architecture, deployment, and performance tuning skills.
 &#x20;&#x20;
 
