@@ -21,7 +21,7 @@
 
 ## 1. 📌 Objectives
 
-- Run WordPress with Docker on a low-end VPS (1vCPU, 1GB RAM)
+- Run WordPress with Docker on a basic VPS (1vCPU, 1GB RAM)
 - Serve 5000 concurrent clients/minute
 - Achieve 189ms average response time
 - Use only free or open-source stack (Docker, Caddy, Redis, MariaDB)
