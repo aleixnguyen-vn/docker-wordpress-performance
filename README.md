@@ -10,25 +10,14 @@
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04_LTS-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
 
-# 🎈 [CASE STUDY] WordPress on Docker: 5000 Client Benchmark on 1GB RAM VPS
-
-> **"Optimizing WordPress at this level isn’t about plugins — it’s about removing bottlenecks one by one."**
-
-> ⚠️ Disclaimer: This repo focuses solely on the technical side – site architecture, deployment, and performance tuning skills.
-&#x20;&#x20;
-
+# [CASE STUDY] WordPress on Docker: 5000 Client Benchmark on 1GB RAM VPS
+> 🚨 **NOTE**: 
+This repository (v2.0) is now deprecated and preserved for archive purposes only. The architecture has been completely upgraded to **v3.5**, more practical and effiency solution.
+>
+👉 **[Content Distribution Platform Infrastructure on 5.78EUR VPS)](https://github.com/aleixnguyen-vn/simracing-community-platform-stack)**
 ---
 
-## 1. 📌 Objectives
-
-- Run WordPress with Docker on a basic VPS (1vCPU, 1GB RAM)
-- Serve 5000 concurrent clients/minute
-- Achieve 189ms average response time
-- Use only free or open-source stack (Docker, Caddy, Redis, MariaDB)
-
----
-
-## 2. ⚙️ Stack Overview
+## 1. ⚙️ Stack Overview
 
 - **VPS**: Vultr 6$ VPS (1vCPU, 1GB RAM, 25GB SSD NVMe)
 - **OS:** Ubuntu 22.04 LTS
@@ -41,95 +30,7 @@
 
 ---
 
-## 3. 💪 Key Optimizations
-
-### 3.1 PHP-FPM Pool (wp-app)
-
-```ini
-pm = dynamic
-pm.max_children = 4
-pm.start_servers = 2
-pm.min_spare_servers = 1
-pm.max_spare_servers = 3
-pm.max_requests = 500       ; auto recycle to avoid memory leak
-
-
-; increased php execution timeout 
-request_terminate_timeout = 30s
-```
-
-### 3.2 OPCache
-
-```ini
-opcache.enable=1
-opcache.enable_cli=1
-opcache.memory_consumption=128
-opcache.interned_strings_buffer=16
-opcache.max_accelerated_files=10000
-opcache.validate_timestamps=0  ; if dont require hot reload file
-opcache.revalidate_freq=60
-```
-
-### 3.3 Redis Configuration
-
-```ini
-maxmemory 256mb
-maxmemory-policy allkeys-lru
-```
-
-- Redis as object cache for WordPress
-- Hit rate: **99.93%**
-- **No manual preload yet**, cache populated purely through real traffic
-
-### 3.4 NGINX Performance
-
-```nginx
-gzip on;
-gzip_disable "msie6";
-
-gzip_vary on;
-gzip_proxied any;
-gzip_comp_level 5;               # 1 - 9(5 for best performance)
-gzip_buffers 16 8k;
-gzip_http_version 1.1;
-gzip_min_length 256;
-
-gzip_types
-    text/plain
-    text/css
-    application/json
-    application/javascript
-    application/x-javascript
-    text/xml
-    application/xml
-    application/xml+rss
-    image/svg+xml;
-```
-
-### 3.5 Caddy for SSL
-
-```text
-example.com {
-    reverse_proxy nginx:80 {
-        header_up X-Forwarded-Proto https
-    }
-
-    encode gzip
-
-    @static {
-        path_regexp \.(jpg|jpeg|png|gif|ico|css|js|woff2?|ttf|svg)$
-    }
-
-    header @static {
-        Cache-Control "public, max-age=31536000"
-        Expires "Sun, 31 Dec 2037 23:55:55 GMT"
-    }
-}
-```
-
----
-
-## 4. 📊 Benchmark Results (Loader.io)
+## 2. 📊 Benchmark Results (Loader.io)
 
 ### Scenario:
 
@@ -150,7 +51,7 @@ example.com {
 
 ---
 
-## 5. 🏆 Summary
+## 3. 🏆 Summary
 
 - Dockerized WordPress stack on 1vCPU/1GB RAM VPS
 - No paid services: all open-source or free-tier
@@ -164,7 +65,7 @@ example.com {
 
 ---
 
-## 6. 🖼 Some screenshots
+## 4. 🖼 Some screenshots
 
 Below are key screenshots capturing performance results and system metrics during the tests.
 
@@ -237,7 +138,7 @@ TTFB under 200ms, total load <2s across 67 assets.
 
 _For more screenshots of alternative configs and test iterations, browse the full `/screenshots` folder in the repository._
 
-## 7. 📆 Future Improvements
+## 4. 📆 Future Improvements
 
 - Add FastCGI Cache (NGINX-level full page caching)
 - Integrate GitHub Actions to trigger Redis preload after deploy
@@ -246,11 +147,6 @@ _For more screenshots of alternative configs and test iterations, browse the ful
 
 ---
 
-## 8. 💼 Repository & Source Code
+## 5. 💼 Repository & Source Code
 
 > [https://github.com/aleixnguyen-vn/docker-wordpress-performance](https://github.com/aleixnguyen-vn/docker-wordpress-performance)
-
----
-
-> ⏱️ I picked up Docker at 2PM. This stack was live — and benchmarking — before midnight.
-> 🔊 "You don't need a bigger server. You need better config."
