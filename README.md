@@ -14,7 +14,7 @@
 > 🚨 **NOTE**: 
 This repository (v2.0) is now deprecated and preserved for archive purposes only. The architecture has been completely upgraded to **v3.5**, more practical and effiency solution.
 >
-👉 **[Content Distribution Platform Infrastructure on 5.78EUR VPS)](https://github.com/aleixnguyen-vn/simracing-community-platform-stack)**
+New repo: 🔗 **[Content Distribution Platform Infrastructure on 5.78EUR VPS](https://github.com/aleixnguyen-vn/simracing-community-platform-stack)**
 ---
 
 ## 1. ⚙️ Stack Overview
